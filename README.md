@@ -77,7 +77,26 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+1. In the Observer pattern diagram explained by the Head First Design Pattern book, Subscriber is defined as an interface. Explain based on your understanding of Observer design patterns, do we still need an interface (or trait in Rust) in this BambangShop case, or a single Model struct is enough?
+> It's good practice to define Subscriber as an interface, as it allows for scalability and compliance to the SOLID principles. But in bambangshop's case, if there is no need for different types of subscribers with differing behaviours, a single Model struct should just suffice.
+2. id in Program and url in Subscriber is intended to be unique. Explain based on your understanding, is using Vec (list) sufficient or using DashMap (map/dictionary) like we currently use is necessary for this case?
+> Unique id and url allows for O(1) look up time complexity with the usage of DashMaps, compared to Vec's O(n). This will always be useful, especially if there is a need to expand/scale in the future. 
+3. When programming using Rust, we are enforced by rigorous compiler constraints to make a thread-safe program. In the case of the List of Subscribers (SUBSCRIBERS) static variable, we used the DashMap external library for thread safe HashMap. Explain based on your understanding of design patterns, do we still need DashMap or we can implement Singleton pattern instead?
+> Singleton pattern isn't sufficient to ensure thread-safety in the usage of HashMaps. It does not provide safe concurrent access to HashMaps without the DashMap external library. It only ensures that a class has only one instance and provides a global point of access for it. 
 
 #### Reflection Publisher-2
+1. In the Model-View Controller (MVC) compound pattern, there is no “Service” and “Repository”. Model in MVC covers both data storage and business logic. Explain based on your understanding of design principles, why we need to separate “Service” and “Repository” from a Model?
+> It is to be compliant with the Single Responsibility Principle (SRP), one of the principles in SOLID. The Model should only focus on the domain data, the Repository with data storage and retrieval, and the Service with business logic. Doing it this way is beneficial for future maintainability as each layer has a clear responsibility and can be worked on independently.
+2. What happens if we only use the Model? Explain your imagination on how the interactions between each model (Program, Subscriber, Notification) affect the code complexity for each model?
+> The Model would then become bloated and very complex, having to contain and handle all of its own data storage and business logic. Future testing, maintaining, and scaling would then become a nightmare to handle. 
+3. Have you explored more about Postman? Tell us how this tool helps you to test your current work. You might want to also list which features in Postman you are interested in or feel like it is helpful to help your Group Project or any of your future software engineering projects.
+> I've yet to explore further, but as far as I know it's a useful tool to quickly test endpoints of our web applications without having to necessarily write code, exploring the functionality of our web applications quickly. It can be utilized to emulate behavior between a client and the server, which is always helpful.
 
 #### Reflection Publisher-3
+1. Observer Pattern has two variations: Push model (publisher pushes data to subscribers) and Pull model (subscribers pull data from publisher). In this tutorial case, which variation of Observer Pattern that we use?
+> Push model. In this model the publisher sends the notification to the subscriber, while the subscriber does not need to request the notification from the publisher. This model is used in the notify function in the Notification service. The subscribers are notified when any change is made with the relevant data being sent to them, and they need not to request or pull the data from the publisher.
+2. What are the advantages and disadvantages of using the other variation of Observer Pattern for this tutorial case? (example: if you answer Q1 with Push, then imagine if we used Pull)
+> Pull is more flexible as subscribers have control of when they can receive data and which. It is however more difficult to implement and very prone to inefficiancy as subscribers could need to poll frequently to receive updates.  
+3. Explain what will happen to the program if we decide to not use multi-threading in the notification process.
+> This will cause processes to stop whenever a notification is being sent to a subscriber, as the process needs to wait for the notification to be sent to the subscriber before continuing to the next process. This leads to inefficiancy and more and more latency as the number of subscribers increases, making the program to not scale well.
+
